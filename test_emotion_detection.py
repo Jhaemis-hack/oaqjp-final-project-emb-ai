@@ -3,9 +3,15 @@ import unittest
 
 class TestSentimentAnalyzer(unittest.TestCase):
     def test_sentiment_analyzer(self):
-        self.assertEqual(emotion_detector("I love working with python").get("label"), "SENT_POSITIVE"),
-        self.assertEqual(emotion_detector("I hate working with python").get("label"), "SENT_NEGATIVE"),
-        self.assertEqual(emotion_detector("I am neutral on python").get("label"),"SENT_NEUTRAL")
+        self.assertEqual(emotion_detector("I am glad this happened").get("dominant_emotion"), "joy"),
+        
+        self.assertEqual(emotion_detector("I am really mad about this").get("dominant_emotion"), "anger"),
+
+        self.assertEqual(emotion_detector("I feel disgusted just hearing about this").get("dominant_emotion"),"disgust"),
+
+        self.assertEqual(emotion_detector("I am so sad about this").get("dominant_emotion"),"sadness"),
+
+        self.assertEqual(emotion_detector("I am really afraid that this will happen").get("dominant_emotion"),"fear")
 
 
 unittest.main()
