@@ -2,18 +2,18 @@
     analysis to be executed over the Flask channel and deployed on
     localhost:5000.
 '''
-# Import Flask, render_template, request from the flask pramework package : TODO
+# Import Flask, render_template, request from the flask pramework package
 from flask import Flask, render_template, request
-# Import the sentiment_analyzer function from the package created: TODO
-from SentimentAnalysis.sentiment_analysis import sentimental_analyzer
+# Import the emotion_detector function from the package created
+from EmotionDetection.emotion_detection import emotion_detector
 
 #Initiate the flask app
-app = Flask("My Sentimental Analyzer app")
+app = Flask("My Emotion Detector app")
 
-@app.route("/sentimentAnalyzer")
-def sent_analyzer():
+@app.route("/emotionDetector")
+def sent_detector():
     ''' This code receives the text from the HTML interface and 
-        runs sentiment analysis over it using sentiment_analysis()
+        runs emotion detector over it using emotion_detector()
         function. The output returned shows the label and its confidence 
         score for the provided text.
     '''
@@ -21,15 +21,20 @@ def sent_analyzer():
     if text_to_analyze is None:
         return { 'error': 'text to anlyze params is required'}, 400
 
-    result = sentimental_analyzer(text_to_analyze)
+    result = emotion_detector(text_to_analyze)
 
-    if result["label"] is None or result["score"] is None:
-        return "Invalid input ! Try again", 200
+    print("got in here")
+    print("the result", result)
 
-    label = result["label"].split("_")[1]
-    score = result["score"]
+    emotion_metrics = ""
 
-    return f"The given text has been identified as {label} with a score of {score}.", 200
+    for key, value in result.items():
+        if key == "dominant_emotion":
+            emotion_metrics += f". The dominant emotion is {value}."
+        else:
+            emotion_metrics += f", '{key}': {value}"
+
+    return f"For the given statement, the system response is {emotion_metrics}", 200
 
 @app.route("/")
 def render_index_page():
@@ -37,7 +42,6 @@ def render_index_page():
         page over the Flask channel
     '''
     return render_template("index.html")
-
 
 if __name__ == "__main__":
     app.run(port=5000, host="0.0.0.0")

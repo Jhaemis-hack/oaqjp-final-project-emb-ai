@@ -11,6 +11,7 @@ def emotion_detector(text):
     Input= { "raw_document": { "text": text_to_analyse}}
 
     response =requests.post(URL, json = Input, headers=HEADERS)
+    
     formatted_response= json.loads(response.text)
     emotions = formatted_response["emotionPredictions"][0]["emotion"]
 
