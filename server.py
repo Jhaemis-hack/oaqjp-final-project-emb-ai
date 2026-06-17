@@ -18,13 +18,14 @@ def sent_detector():
         score for the provided text.
     '''
     text_to_analyze = request.args["textToAnalyze"]
-    if text_to_analyze is None:
-        return { 'error': 'text to anlyze params is required'}, 400
+
+    if text_to_analyze is None or text_to_analyze == "":
+        return "Invalid text! Please try again!.", 400
 
     result = emotion_detector(text_to_analyze)
 
-    print("got in here")
-    print("the result", result)
+    if result.get("dominant_emotion ") is None:
+        return "Invalid text! Please try again!.", 400
 
     emotion_metrics = ""
 
